@@ -34,11 +34,11 @@
 ## Model Pretraining
 For instance, run the following command to train an embedding on different datasets.
 ```
-python main.py  --loss VBPR  --dataset_name '100k'  --encoder MF  --M 2 --N 4  --cpos 10 --cneg 0.5
+python main.py  --loss 'VBPR'  --dataset_name '100k'  --encoder MF  --M 2 --N 4  --cpos 10 --cneg 0.5
 ```
 
 
-## Public Parameter Settings
+## Public Model Parameter Settings
 | Dataset  | Backbone | Feature dim | Learning Rate | l2 | Batch Size  | 
 |---------|:--------------:|:--------------:|:----:|:-----:|:---:|
 | MovieLens 100K  |     MF        |       64       | 1e-3 |  1e-6  | 1024  |  
