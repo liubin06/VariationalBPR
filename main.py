@@ -103,8 +103,8 @@ if __name__ == '__main__':
 
     # data prepare
     data_path = args.root + '/' + args.dataset + '.csv'
-    train_path = args.root + '/' + args.dataset + '_train5.csv'
-    test_path = args.root + '/' + args.dataset + '_test5.csv'
+    train_path = args.root + '/' + args.dataset + '_train.csv'
+    test_path = args.root + '/' + args.dataset + '_test.csv'
 
     num_users, num_items = utils.load_data(data_path)
     pos_dict, neg_dict, datapair, train_tensor = utils.load_train(train_path,num_users, num_items)
