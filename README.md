@@ -41,20 +41,20 @@ python main.py  --loss 'VBPR'  --dataset_name '100k'  --encoder 'LightGCN'  --M 
 | MovieLens 1M  |     MF        |        64        | 1e-3 |  1e-6  | 1024  |  -|
 | Gowalla |     MF        |        128       | 1e-3 |  1e-6  | 1024  |  -|
 | Yelp2018  |     MF        |       128      | 1e-3 |  1e-6  | 1024  |  -|
-| MovieLens 100K |    LightGCN        |        -        | - |  -  | -  |  -|
-| MovieLens 1M |     LightGCN        |        -        | - |  -  | -  |  -|
-| Gowalla |     LightGCN        |        -        | - |  -  | -  |  -|
-| Yelp2018  |     LightGCN        |        -        | - |  -  | -  |  -|
+| MovieLens 100K |    LightGCN        |        64        | 1e-3 | 1e-5  | 1024  | 1|
+| MovieLens 1M |     LightGCN        |        64        | 1e-3 |  1e-6  | 1024  |  2|
+| Gowalla |     LightGCN        |        128        | 1e-3 |  1e-7  | 1024  |  1 |
+| Yelp2018  |     LightGCN        |        128        | 1e-3 |  1e-7  | 1024  |  2|
 
 ## VBPR-specific  Parameter Settings
-| Dataset  | Backbone | M | N | $c_\text{pos}$ | $c_\text{neg}$  | 
+| Dataset  | Backbone | $M$ | $N$ | $c_\text{pos}$ | $c_\text{neg}$  | 
 |---------|:--------------:|:--------------:|:----:|:-----:|:---:|
 | MovieLens 100K  |     MF        |      2       | 4 |  10  | 0.5 |  
 | MovieLens 1M  |     MF        |       2       | 4 |  10 | 0.5 |   
 | Gowalla  |     MF        |         2    | 15 | 10 | 0.1 | 
 | Yelp2018  |     MF        |        2     | 15  |10  | 0.1 | 
-| MovieLens 100K |    LightGCN        |             |  |  |  | 
-| MovieLens 1M  |     LightGCN        |             |  |  |  | 
-| Gowalla  |     LightGCN       |             |  |  |  | 
-| Yelp2018   |     LightGCN        |             |  |  |  | 
+| MovieLens 100K |    LightGCN        |      2       | 5 |10  | 0.1 | 
+| MovieLens 1M  |     LightGCN        |       2      | 4 | 10 |0.5  | 
+| Gowalla  |     LightGCN       |         2    | 20 | 10 | 0.1 | 
+| Yelp2018   |     LightGCN        |        2     |20  |10  |0.1  | 
 
