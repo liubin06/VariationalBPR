@@ -1,4 +1,5 @@
 # Variational-BPR
+This paper introduces latent user-specific interest prototypes and constructs a variational lower bound of the likelihood function as an alternative optimization objective. Correspondingly, we propose a generalized pairwise loss, termed Variational BPR, to address the challenges of calculating and optimizing the likelihood function caused by implicit feedback. The user interest prototypes are obtained through an attention function, enabling more robust pairwise comparisons to mitigate the impact of noise. Additionally, Variational BPR offers a flexible approach for mining hard samples and contributes to achieving uniform feature distribution.
 
 ## Flags 
 
