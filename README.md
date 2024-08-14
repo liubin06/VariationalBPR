@@ -59,7 +59,7 @@ python main.py  --loss 'VBPR'  --dataset_name '100k'  --encoder 'LightGCN'  --M 
 | Gowalla  |     MF        |         2    | 15 | 10 | 0.1 | 
 | Yelp2018  |     MF        |        2     | 15  |10  | 0.1 | 
 | MovieLens 100K |    LightGCN        |      2       | 5 |10  | 0.1 | 
-| MovieLens 1M  |     LightGCN        |       2      | 4 | 10 |0.5  | 
+| MovieLens 1M  |     LightGCN        |       2      | 6 | 10 |0.1  | 
 | Gowalla  |     LightGCN       |         2    | 20 | 10 | 0.1 | 
 | Yelp2018   |     LightGCN        |        2     |20  |10  |0.1  | 
 
