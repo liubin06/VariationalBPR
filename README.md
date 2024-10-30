@@ -2,8 +2,12 @@
 This paper introduces latent user-specific interest prototypes and constructs a variational lower bound of the Bayesian Personalized Ranking (BPR) as an alternative optimization objective. Correspondingly, we propose a generalized pairwise loss, termed Variational BPR, to address the challenges of calculating and optimizing the likelihood function caused by implicit feedback. The user interest prototypes are obtained through an attention function, enabling more robust pairwise comparisons to mitigate the impact of noise. Additionally, Variational BPR offers a flexible approach for mining hard samples and contributes to achieving uniform feature distribution.
 
 <p align='left'>
-<img src='https://github.com/liubin06/Variational-BPR/blob/main/bound.png' width='400'/>
+<img src='https://github.com/liubin06/Variational-BPR/blob/main/bound.png' width='600'/>
 </p>
+
+## Prerequisites
+- Python 3.7 
+- PyTorch 1.12.1
 
 ## Flags 
 
