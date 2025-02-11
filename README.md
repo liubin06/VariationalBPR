@@ -76,13 +76,15 @@ python main.py  --loss 'VBPR'  --dataset_name '100k'  --encoder 'LightGCN'  --M 
 | Yelp2018   |     LightGCN        |        2     |20  |10  |0.1  | 
 
 ## 6. Customization Guide
-To train with proprietary datasets:
+To train on a private dataset or use a customized encoder, follow these steps:
 
 1. **Data Formatting**:
-   - Arrange data with `n` component columns followed by Tg label at last column
-   - Split data as `tran_tg.csv` and `validation_tg.csv`
+   - Organize the data into (u, i) tuples, as shown in the example data in the "data" directory.
+   - Split data as `tran.txt` and `test.txt`
 
-2. **Configuration**:
+
+2. **Encoder Configuration**:
+   - Ensure that for any user or item, the encoding results in a d - dimensional feature representation.
    ```python
    # In main.py
    parser.add_argument('--num_components', type=int, default=SET_YOUR_COMPONENT_NUM)  # Set number of components
