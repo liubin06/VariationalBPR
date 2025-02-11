@@ -1,15 +1,25 @@
 # Variational-BPR
-This paper introduces latent user-specific interest prototypes and constructs a variational lower bound of the Bayesian Personalized Ranking (BPR) as an alternative optimization objective. Correspondingly, we propose a generalized pairwise loss, termed Variational BPR, to address the challenges of calculating and optimizing the likelihood function caused by implicit feedback. The user interest prototypes are obtained through an attention function, enabling more robust pairwise comparisons to mitigate the impact of noise. Additionally, Variational BPR offers a flexible approach for mining hard samples and contributes to achieving uniform feature distribution.
+
+## 1. Introduction
+Variational BPR is a novel and easily implementable learning objective that integrates key components for enhancing collaborative filtering: likelihood optimization, noise reduction, and popularity debiasing. Our approach involves decomposing the pairwise loss under the ELBO-KL framework and deriving its variational lower bound to establish a manageable learning objective for approximate inference.  Within this bound, we introduce an attention-based latent interest prototype contrastive mechanism, replacing instance-level contrastive learning,  to effectively reduce noise from problematic samples. The process of deriving interest prototypes implicitly incorporates a flexible hard sample mining strategy, capable of simultaneously identifying hard positive and hard negative samples. Furthermore, we demonstrate that this hard sample mining strategy promotes feature distribution uniformity, thereby alleviating popularity bias. 
 
 <p align='left'>
-<img src='https://github.com/liubin06/Variational-BPR/blob/main/bound.png' width='600'/>
+<img src='https://github.com/liubin06/Variational-BPR/blob/main/bound.png' width='800'/>
 </p>
 
-## Prerequisites
+## 2. Prerequisites
 - Python 3.7 
 - PyTorch 1.12.1
+  
+## 3. Code Architecture
+| File | Description |
+|------|-------------|
+| `utils.py` | Data loading utilities and GPU-optimized dataset organization |
+| `model.py` | Backbone architecture implementation |
+| `evaluation.py` | Top-k performance evaluation on validation set |
+| `main.py` | Central workflow controller (data processing, training, evaluation) |
 
-## Flags 
+## 4. Configuration Flags
 
 `--loss`: loss function, choose from ['VBPR' , 'BPR']
 
@@ -28,9 +38,7 @@ This paper introduces latent user-specific interest prototypes and constructs a 
 `--cneg`: Negitive scalling factor
 
 
-
-
-## Model Pretraining
+## 5.Model Pretraining
 
 For each dataset, the backbone model hyperparameters for BPR and VBPR are fixed the same. For instance, run the following command to train an embedding on different datasets.
 
@@ -43,7 +51,7 @@ python main.py  --loss 'VBPR'  --dataset_name '100k'  --encoder 'LightGCN'  --M 
 ```
 
 
-## Public Model Parameter Settings
+### 5.1 Public Model Parameter Settings
 | Dataset  | Backbone | Feature dim | Learning Rate | l2 | Batch Size  | Hop  | 
 |---------|:--------------:|:--------------:|:----:|:-----:|:---:|:---:|
 | MovieLens 100K  |     MF        |       64       | 1e-3 |  1e-5  | 1024  |  -|
@@ -55,7 +63,7 @@ python main.py  --loss 'VBPR'  --dataset_name '100k'  --encoder 'LightGCN'  --M 
 | Gowalla |     LightGCN        |        128        | 1e-3 |  1e-7  | 1024  |  1 |
 | Yelp2018  |     LightGCN        |        128        | 1e-3 |  1e-7  | 1024  |  2|
 
-## VBPR-specific  Parameter Settings
+### 5.2 VBPR-specific  Parameter Settings
 | Dataset  | Backbone | $M$ | $N$ | $c_\text{pos}$ | $c_\text{neg}$  | 
 |---------|:--------------:|:--------------:|:----:|:-----:|:---:|
 | MovieLens 100K  |     MF        |      2       | 4 |  10  | 0.5 |  
@@ -66,4 +74,21 @@ python main.py  --loss 'VBPR'  --dataset_name '100k'  --encoder 'LightGCN'  --M 
 | MovieLens 1M  |     LightGCN        |       2      | 6 | 10 |0.1  | 
 | Gowalla  |     LightGCN       |         2    | 20 | 10 | 0.1 | 
 | Yelp2018   |     LightGCN        |        2     |20  |10  |0.1  | 
+
+## 6. Customization Guide
+To train with proprietary datasets:
+
+1. **Data Formatting**:
+   - Arrange data with `n` component columns followed by Tg label at last column
+   - Split data as `tran_tg.csv` and `validation_tg.csv`
+
+2. **Configuration**:
+   ```python
+   # In main.py
+   parser.add_argument('--num_components', type=int, default=SET_YOUR_COMPONENT_NUM)  # Set number of components
+   interval = [300, 400]  # Set YOUR desired screening temperature range (℃)
+
+
+## 7. License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
