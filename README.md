@@ -3,8 +3,8 @@
 ## 1. Introduction
 Variational BPR is a novel and easily implementable learning objective that integrates key components for enhancing collaborative filtering: likelihood optimization, noise reduction, and popularity debiasing. Our approach involves decomposing the pairwise loss under the ELBO-KL framework and deriving its variational lower bound to establish a manageable learning objective for approximate inference.  Within this bound, we introduce an attention-based latent interest prototype contrastive mechanism, replacing instance-level contrastive learning,  to effectively reduce noise from problematic samples. The process of deriving interest prototypes implicitly incorporates a flexible hard sample mining strategy, capable of simultaneously identifying hard positive and hard negative samples. Furthermore, we demonstrate that this hard sample mining strategy promotes feature distribution uniformity, thereby alleviating popularity bias. 
 
-<p align='left'>
-<img src='https://github.com/liubin06/Variational-BPR/blob/main/bound.png' width='800'/>
+<p align='center'>
+<img src='https://github.com/liubin06/Variational-BPR/blob/main/bound.png' width='700'/>
 </p>
 
 ## 2. Prerequisites
@@ -84,7 +84,8 @@ To train on a private dataset or use a customized encoder, follow these steps:
 
 
 2. **Encoder Configuration**:
-   - Ensure that for any user or item, the encoding results in a d - dimensional feature representation.
+   - Rewrite `model.py` to implemente YOUR_OWN_Backbone architecture.
+   - Ensure that for any user or item, the encoding results in a $d$ - dimensional feature representation.
 
 2. **Parameter Configuration**:
    ```python
