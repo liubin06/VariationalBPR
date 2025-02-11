@@ -85,10 +85,13 @@ To train on a private dataset or use a customized encoder, follow these steps:
 
 2. **Encoder Configuration**:
    - Ensure that for any user or item, the encoding results in a d - dimensional feature representation.
+
+2. **Parameter Configuration**:
    ```python
    # In main.py
-   parser.add_argument('--num_components', type=int, default=SET_YOUR_COMPONENT_NUM)  # Set number of components
-   interval = [300, 400]  # Set YOUR desired screening temperature range (℃)
+   parser.add_argument('--dataset', type=str, default='YOUR_DATA_SET', help='Dataset name')
+   parser.add_argument('--backbone', default='YOUR_BACKBONE', type=str, help='Backbone model')
+   ```
 
 
 ## 7. License
