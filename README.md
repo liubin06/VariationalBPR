@@ -79,7 +79,7 @@ python main.py  --loss 'VBPR'  --dataset_name '100k'  --encoder 'LightGCN'  --M 
 To train on a private dataset or use a customized encoder, follow these steps:
 
 1. **Data Formatting**:
-   - Organize the data into (u, i) tuples, as shown in the example data in the "data" directory.
+   - Organize the data into (u, i) tuples, as shown in the example data in the [data](data) directory.
    - Split data as `tran.txt` and `test.txt`
 
 
