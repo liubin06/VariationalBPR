@@ -27,16 +27,20 @@ def load_train(train_path, num_users, num_items):
     data = pd.read_csv(train_path, header=0, sep='\t', encoding='utf-8')
     train_tensor = torch.zeros(num_users, num_items)
     datapair = []
+    quality = np.zeros(num_items)
     for i in data.itertuples():
-        user, item = int(getattr(i, 'user')), int(getattr(i, 'item'))
+        user, item, rating = int(getattr(i, 'user')), int(getattr(i, 'item')), int(getattr(i,'rating'))
         datapair.append([user, item])
         pos_items.setdefault(user, list())
         pos_items[user].append(item)
         train_tensor[user, item] = 1
+        quality[item] += rating
     for user in pos_items.keys():
         neg_items[user] = list(item_set - set(pos_items[user]))
     print('Number of Interactions for Training:{}'.format(len(datapair)))
-    return pos_items, neg_items, datapair, train_tensor
+    pop = torch.sum(train_tensor, dim=0)+1
+    quality = quality/pop
+    return pos_items, neg_items, datapair, train_tensor, pop, quality
 
 
 def load_test(test_path, num_users, num_items):
@@ -111,7 +115,7 @@ class MyData(Dataset):
                 new_data.append(data_entry)
             return torch.tensor(new_data)
 
-        elif self.args.loss == 'VBPR':
+        else:
             new_data = []
             for entry in batch:
                 u, i = entry[0], entry[1]
