@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import argparse
-import os
 import time
 import random
 import torch
@@ -28,18 +27,18 @@ def init_seed(seed):
 
 
 @torch.no_grad()
-def prior_plus(pos_scores, rarity, positem_id):
-    hardness = torch.sigmoid((pos_scores.mean(dim=-1, keepdim=True) - pos_scores) / 0.1)  # [bs,M]
-    batch_rarity = rarity[positem_id]  # [bs,M]
-    quality = item_quality[positem_id]  # [bs,M]
+def prior_plus(pos_scores, positem_id):
+    hardness = torch.nn.functional.softmax((pos_scores.mean(dim=-1, keepdim=True) - pos_scores) / args.hardnees_tau,dim=-1)  # [bs,M]
+    batch_rarity = item_rarity[positem_id]  # [bs,M]
+    quality = good_quality[positem_id]  # [bs,M]
     return batch_rarity ** args.pos_rarity * hardness ** args.pos_hardness * quality ** args.pos_quality  # [bs,M]
 
 
 @torch.no_grad()
-def prior_minus(neg_scores, pop, negitem_id):
-    hardness = torch.sigmoid((neg_scores - neg_scores.mean(dim=-1, keepdim=True)) / 0.1)  # [bs,N]
-    batch_pop = pop[negitem_id]  # [bs,N]
-    quality_bad = (1 - item_quality)[negitem_id]  # [bs,N]
+def prior_minus(neg_scores, negitem_id):
+    hardness = torch.nn.functional.softmax((neg_scores - neg_scores.mean(dim=-1, keepdim=True)) / args.hardnees_tau,dim=-1)  # [bs,N]
+    batch_pop = item_pop[negitem_id]  # [bs,N]
+    quality_bad = bad_quality[negitem_id]  # [bs,N]
     return batch_pop ** args.neg_popularity * hardness ** args.neg_hardness * quality_bad ** args.neg_badquality  # [bs,N]
 
 
@@ -55,10 +54,29 @@ def VarInference(scores, prior, scaling_factor, eps=1e-12):
     VarDist = torch.softmax(logits, dim=-1)  # [bs, M]
     return VarDist
 
-
-def VarBPR(pos_score, neg_score, alpha, beta):
+def VarBPRExact(pos_score, neg_score, alpha, beta):
     '''
-    :param
+    This is the variational BPR implementation without plug-in approximation, for small M,N, choose VarBPRExact to achieve better performance.
+    :param pos_score: [bs * M]
+    :param neg_score: [bs * N]
+    :param alpha: [bs * M]
+    :param beta:  [bs * N]
+    :return:
+    '''
+    margin = (pos_score.unsqueeze(2) - neg_score.unsqueeze(1)).reshape(pos_score.size(0), -1)  # [bs, M*N]
+    logistics = torch.nn.functional.softplus(-margin)  # [bs, M*N]
+    dist = (alpha.unsqueeze(2) * beta.unsqueeze(1)).reshape(pos_score.size(0), -1)  # [bs, M*N]
+    loss = torch.sum(logistics * dist, dim=-1).mean()
+    return loss
+
+
+def VarBPRPlugIn(pos_score, neg_score, alpha, beta):
+    '''
+    This is the variational BPR implementation with plug-in approximation, for large M,N, choose VarBPRApprox to ensure efficiency.
+    :param pos_score: [bs * M]
+    :param neg_score: [bs * N]
+    :param alpha: [bs * M]
+    :param beta:  [bs * N]
     :return:
     '''
     xui = torch.sum(pos_score * alpha, dim=-1)  # [bs,]
@@ -68,46 +86,36 @@ def VarBPR(pos_score, neg_score, alpha, beta):
     return loss
 
 
-def ELBO(pos_score, neg_score, alpha, beta):
-    margin = (pos_score.unsqueeze(2) - neg_score.unsqueeze(1)).reshape(pos_score.size(0), -1)  # [bs, M*N]
-    logistics = torch.nn.functional.softplus(-margin)  # [bs, M*N]
-    dist = (alpha.unsqueeze(2) * beta.unsqueeze(1)).reshape(pos_score.size(0), -1)  # [bs, M*N]
-    loss = torch.sum(logistics * dist, dim=-1).mean()
-    return loss
-
-
-def train(model, data_loader, train_optimizer, rarity, pop):
+def train(model, data_loader, train_optimizer):
     model.train()
     total_loss, total_num, train_bar = 0.0, 0, tqdm(data_loader)
     for batch in train_bar:
         batch = batch.to(device, non_blocking=True)
         user_id, item_id = batch[:, 0], batch[:, 1:]  # [bs,],  [bs,M+N]
         positem_id, negitem_id = item_id[:, 0:args.M], item_id[:, args.M:]
+
+        # _______________________________________Fearture Exaction_____________________________________________
         user_embs, item_embs = model.forward(user_id, item_id)  # [bs,dim],  [bs,M+N, dim]
         score = torch.sum(user_embs.unsqueeze(1) * item_embs, dim=-1)  # [bs, M+N]
         pos_score, neg_score = score[:, 0:args.M], score[:, args.M:]  # [bs, M], [bs, N]
-        if args.loss == 'BPR':
-            assert args.M == 1
-            assert args.N == 1
-            loss = -torch.log(torch.sigmoid(pos_score - neg_score)).mean()
+
+        # _________________________Encode quality/ popularity/hardness with prior______________________________
+        pi_plus = prior_plus(pos_score, positem_id)  # [bs, M]
+        pi_minus = prior_minus(neg_score, negitem_id)  # [bs, N]
+
+        # _________________________             Variational Inference            ______________________________
+        alpha = VarInference(pos_score, pi_plus, args.cpos)  # [bs, M]
+        beta = VarInference(-neg_score, pi_minus, args.cneg)  # [bs, N]
+
+        # _________________________             Variational Learning             ______________________________
+        if args.loss == 'VarBPRPlugIn':
+            loss = VarBPRPlugIn(pos_score, neg_score, alpha, beta)
+
+        elif args.loss == 'VarBPRExact':
+            loss = VarBPRExact(pos_score, neg_score, alpha, beta)
+
         else:
-            # _________________________Encode quality/ popularity/hardness with prior______________________________
-            pi_plus = prior_plus(pos_score, rarity, positem_id)  # [bs, M]
-            pi_minus = prior_minus(neg_score, pop, negitem_id)  # [bs, N]
-
-            # _________________________             Variational Inference            ______________________________
-            alpha = VarInference(pos_score, pi_plus, args.cpos)  # [bs, M]
-            beta = VarInference(-neg_score, pi_minus, args.cneg)  # [bs, N]
-
-            # _________________________             Variational Learning             ______________________________
-            if args.loss == 'VarBPR':
-                loss = VarBPR(pos_score, neg_score, alpha, beta)
-
-            elif args.loss == 'ELBO':
-                loss = ELBO(pos_score, neg_score, alpha, beta)
-
-            else:
-                raise NotImplementedError
+            raise NotImplementedError
         train_optimizer.zero_grad()
         loss.backward()
         train_optimizer.step()
@@ -120,9 +128,10 @@ def train(model, data_loader, train_optimizer, rarity, pop):
 
 
 if __name__ == '__main__':
+    start = time.time()
     parser = argparse.ArgumentParser(description='Train')
     parser.add_argument('--root', type=str, default='./data', help='Path to data directory')
-    parser.add_argument('--dataset', type=str, default='100k',
+    parser.add_argument('--dataset', type=str, default='1m',
                         help='Dataset name, choose from [100k,1m, gowalla, yelp2018]')
 
     parser.add_argument('--backbone', default='MF', type=str, help='Backbone model, choose from [MF, LightGCN]')
@@ -132,14 +141,13 @@ if __name__ == '__main__':
     parser.add_argument('--feature_dim', default=64, type=int, help='Feature dim for latent vector')
     parser.add_argument('--learning_rate', default=1e-3, type=float, help='Learning rate')
     parser.add_argument('--weight_decay', default=1e-6, type=float, help='Weight_decay')
-    parser.add_argument('--hop', default=1, type=int, help='Hop')
+    parser.add_argument('--hop', default=2, type=int, help='Hop')
 
-    parser.add_argument('--loss', default='VarBPR', type=str,
-                        help='Choose Loss Function, choose from [BPR, VarBPR, ELBO]')
-    parser.add_argument('--M', default=4, type=int, help='Number of positive samples')
+    parser.add_argument('--loss', default='VarBPRPlugIn', type=str,help='Choose Loss Function, choose from [VarBPRExact, VarBPRPlugIn]')
+    parser.add_argument('--M', default=2, type=int, help='Number of positive samples')
     parser.add_argument('--N', default=4, type=int, help='Number of negative samples')
-    parser.add_argument('--cpos', default=10, type=float, help='Positive scalling factor')
-    parser.add_argument('--cneg', default=10, type=float, help='Negitive scalling factor')
+    parser.add_argument('--cpos', default=4, type=float, help='Positive scalling factor')
+    parser.add_argument('--cneg', default=4, type=float, help='Negitive scalling factor')
     # build prior
     parser.add_argument('--pos_hardness', default=0, type=float, help='Hardness of positive samples')
     parser.add_argument('--pos_rarity', default=0, type=float, help='Rarity of positive samples')
@@ -147,6 +155,8 @@ if __name__ == '__main__':
     parser.add_argument('--neg_hardness', default=0.5, type=float, help='Hardness of negative samples')
     parser.add_argument('--neg_popularity', default=0, type=float, help='Rarity of negative samples')
     parser.add_argument('--neg_badquality', default=0.5, type=float, help='Rarity of negative samples')
+
+    parser.add_argument('--hardnees_tau', default=0.5, type=float, help='Rarity of negative samples')
 
     init_seed(2024)
     args = parser.parse_args()
@@ -166,16 +176,21 @@ if __name__ == '__main__':
     long_tail_mask[torch.argsort(pop)[:int(pop.numel() * tail_ratio)]] = True
     #################################################
 
+    ################################################# Build popularity related prior
     item_pop = torch.log1p(pop) / torch.log1p(pop.max())
-    item_rarity = (1.0 - item_pop).clamp_min(1e-6)
+    item_rarity = (1.0 - item_pop).clamp_min(1e-12)
     item_pop, item_rarity = item_pop.to(device), item_rarity.to(device)
+    #################################################
 
-    quality = torch.sigmoid((quality - (quality.mean())) / 0.2)
-    item_quality = quality.to(device)
+    ################################################# Build item quality related prior
+    good_quality = torch.sigmoid((quality - (quality.mean())) / 0.2)
+    bad_quality = (1.0 - good_quality).clamp_min(1e-12)
+    good_quality, bad_quality = good_quality.to(device), bad_quality.to(device)
+    #################################################
 
     train_data = utils.MyData(datapair, num_users, num_items, pos_items, neg_items, args)
     train_loader = DataLoader(train_data, collate_fn=train_data.collate_fn, batch_size=args.batch_size, shuffle=True,
-                              num_workers=0, pin_memory=True, drop_last=True)
+                              num_workers=2, pin_memory=True, drop_last=True)
     test_tensor = utils.load_test(test_path, num_users, num_items)
 
     # Model Setup
@@ -193,9 +208,7 @@ if __name__ == '__main__':
     results = []
     for epoch in range(1, args.epochs + 1):
         # Model Training
-        start = time.time()
-        train_loss = train(model, train_loader, optimizer, item_rarity, item_pop)
-        end = time.time()
+        train_loss = train(model, train_loader, optimizer)
 
         # Model Evaluation
         if epoch % 5 == 0:
@@ -204,14 +217,19 @@ if __name__ == '__main__':
             rating_matrix = model.predict() - train_tensor.to(
                 device) * 1000  # erase the training data from predicted rating matrix for evaluation
             result5 = evaluation.topk_eval(rating_matrix, 5, test_tensor.to(device), long_tail_mask=long_tail_mask)
-            print('Evaluation Epoch[{}/{}]: [Precision@{}: {:.4f}, Recall@{}: {:.4f}, F1@{}: {:.4f}, NDCG@{}: {:.4f}, APLT@{}: {:.4f}]'.format(epoch, args.epochs, 5, result5[0], 5, result5[1], 5, result5[2], 5, result5[3], 5, result5[4]))
+            print(
+                'Evaluation Epoch[{}/{}]: [Precision@{}: {:.4f}, Recall@{}: {:.4f}, F1@{}: {:.4f}, NDCG@{}: {:.4f}, APLT@{}: {:.4f}]'.format(
+                    epoch, args.epochs, 5, result5[0], 5, result5[1], 5, result5[2], 5, result5[3], 5, result5[4]))
             result20 = evaluation.topk_eval(rating_matrix, 20, test_tensor.to(device), long_tail_mask=long_tail_mask)
-            print('Evaluation Epoch[{}/{}]: [Precision@{}: {:.4f}, Recall@{}: {:.4f}, F1@{}: {:.4f}, NDCG@{}: {:.4f}, APLT@{}: {:.4f}]'.format(epoch, args.epochs, 20, result20[0], 20, result20[1], 20, result20[2], 20, result20[3], 20,result20[4]))
+            print(
+                'Evaluation Epoch[{}/{}]: [Precision@{}: {:.4f}, Recall@{}: {:.4f}, F1@{}: {:.4f}, NDCG@{}: {:.4f}, APLT@{}: {:.4f}]'.format(
+                    epoch, args.epochs, 20, result20[0], 20, result20[1], 20, result20[2], 20, result20[3], 20,
+                    result20[4]))
             results.append(result5 + result20)
             print('\n')
     best_result, best_epoch = torch.tensor(results).max(dim=0)
-    print('Best Results@Top-5: Precision:[{:.4f}], Recall:[{:.4f}], F1:[{:.4f}], NDCG:[{:.4f}], APLT:[{:.4f}]]'.format(
-        best_result[0], best_result[1], best_result[2], best_result[3], best_result[4]))
-    print('Best Results@Top-20: Precision:[{:.4f}], Recall:[{:.4f}], F1:[{:.4f}], NDCG:[{:.4f}], APLT:[{:.4f}]]'.format(
-        best_result[5], best_result[6], best_result[7], best_result[8], best_result[9]))
+    print('Best Results@Top-5: Precision:[{:.4f}], Recall:[{:.4f}], F1:[{:.4f}], NDCG:[{:.4f}], APLT:[{:.4f}]]'.format(best_result[0], best_result[1], best_result[2], best_result[3], best_result[4]))
+    print('Best Results@Top-20: Precision:[{:.4f}], Recall:[{:.4f}], F1:[{:.4f}], NDCG:[{:.4f}], APLT:[{:.4f}]]'.format(best_result[5], best_result[6], best_result[7], best_result[8], best_result[9]))
     print('Best Epoch:[{}]'.format(best_epoch * 5))
+    end = time.time()
+    print(f"Total Runing time：{end - start:.6f} Second")
