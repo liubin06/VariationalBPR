@@ -110,7 +110,7 @@ python main.py  --loss 'VarBPRExact'
 | Component        | pos_rarity $\lambda_1^+$ | pos_quality $\lambda_2^+$ | pos_hardnees $\lambda_3^+$ | neg_popularity $\lambda_1^-$ | neg_badquality $\lambda_2^-$ | neg_hardnees $\lambda_3^-$ | 
 |------------------|:------------------------:|:-------------------------:|:--------------------------:|:----------------------------:|:----------------------------:|:--------------------------:|
 | MovieLens100k/1M |            0             |             1             |             0              |              0               |             0.5              |            0.5             |
-| Yelp2018/Gowalla |            0             |             0             |             1            |              0               |             0             |            1             |
+| Yelp2018/Gowalla |            0.2             |             0             |             0.8            |              0               |             0             |            1             |
 ## 6. Customization Guide
 To train on a private dataset or use a customized encoder, follow these steps:
 
