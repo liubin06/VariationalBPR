@@ -97,20 +97,20 @@ python main.py  --loss 'VarBPRExact'
 ### 5.2 VarBPR-specific  Parameter Settings
 | Dataset  | Backbone | $M$ | $N$ | $c_\text{pos}$ | $c_\text{neg}$ | 
 |---------|:--------------:|:--------------:|:---:|:--------------:|:--------------:|
-| MovieLens 100K  |     MF        |      2       |  4  |       2        |       4        |  
-| MovieLens 1M  |     MF        |       2       |  4  |       8        |       8        |   
-| Gowalla  |     MF        |         2    | 16  |      4       |     8       | 
-| Yelp2018  |     MF        |        2     | 16  |       4       |      8       | 
-| MovieLens 100K |    LightGCN        |      2       |  4  |       2        |       4        | 
-| MovieLens 1M  |     LightGCN        |       2      |  4  |       8        |       8        | 
+| MovieLens 100K  |     MF        |      2       |  4  |       4        |       4        |  
+| MovieLens 1M  |     MF        |       2       |  4  |       4        |       4        |   
+| Gowalla  |     MF        |         2    | 16  |      8       |     8       | 
+| Yelp2018  |     MF        |        2     | 16  |       8       |      8       | 
+| MovieLens 100K |    LightGCN        |      2       |  4  |       4        |       4        | 
+| MovieLens 1M  |     LightGCN        |       2      |  4  |       4        |       4        | 
 | Gowalla  |     LightGCN       |         2    | 20  |       8       |      8       | 
 | Yelp2018   |     LightGCN        |        2     | 20  |       8       |      8       | 
 
 ### 5.3 Prior Coding
-| Component        | pos_rarity $\lambda_1^+$ | pos_quality $\lambda_2^+$ | pos_hardnees $\lambda_3^+$ | neg_popularity $\lambda_1^-$ | neg_badquality $\lambda_2^-$ | neg_hardnees $\lambda_3^-$ |
+| Component        | pos_rarity $\lambda_1^+$ | pos_quality $\lambda_2^+$ | pos_hardnees $\lambda_3^+$ | neg_popularity $\lambda_1^-$ | neg_badquality $\lambda_2^-$ | neg_hardnees $\lambda_3^-$ | 
 |------------------|:------------------------:|:-------------------------:|:--------------------------:|:----------------------------:|:----------------------------:|:--------------------------:|
 | MovieLens100k/1M |            0             |             1             |             0              |              0               |             0.5              |            0.5             |
-| Yelp2018/Gowalla |            0.5             |             0             |             0.5             |              0               |             0             |            1.0             |
+| Yelp2018/Gowalla |            0             |             0             |             1            |              0               |             0             |            1             |
 ## 6. Customization Guide
 To train on a private dataset or use a customized encoder, follow these steps:
 
