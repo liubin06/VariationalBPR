@@ -14,6 +14,9 @@ VarBPR is a unified variational framework that brings **exposure controllability
 Whether you're pushing the boundaries of recommendation research or building real-world systems with fairness requirements, VarBPR offers both **performance** and **policy control** in one elegant package.
 
 📖 **Paper**: Link to paper [Variational Bayesian Personalized Ranking ](https://arxiv.org/pdf/2503.11067v2)
+### Acknowledgements
+We are profoundly grateful to the anonymous reviewers of IEEE TPAMI for their exceptional efforts in elevating the conceptual foundation and theoretical depth of the Variational BPR framework. 
+
 <p align='center'>
 <img src='https://github.com/liubin06/Variational-BPR/blob/main/bound.png' width='700'/>
 </p>
@@ -134,5 +137,3 @@ To train on a private dataset or use a customized encoder, follow these steps:
 ## 7. License
 This project is licensed under the Apache License 2.0. - see the [LICENSE](LICENSE) file for details.
 
-## 8. Acknowledgements
-We are profoundly grateful to the anonymous reviewers of IEEE TPAMI for their exceptional efforts in elevating the conceptual foundation and theoretical depth of the Variational BPR framework. 
