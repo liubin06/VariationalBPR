@@ -91,7 +91,7 @@ python main.py  --loss 'VarBPRExact'
 | Yelp2018  |     MF        |       128      | 1e-3 | 1e-6 | 1024  |  -|
 | MovieLens 100K |    LightGCN        |        64        | 1e-3 | 1e-6 | 1024  | 1|
 | MovieLens 1M |     LightGCN        |        64        | 1e-3 | 1e-6 | 1024  |  2|
-| Gowalla |     LightGCN        |        128        | 1e-3 | 1e-7 | 1024  |  1 |
+| Gowalla |     LightGCN        |        128        | 1e-3 | 5e-7 | 1024  |  1 |
 | Yelp2018  |     LightGCN        |        128        | 1e-3 | 1e-7 | 1024  |  2|
 
 ### 5.2 VarBPR-specific  Parameter Settings
@@ -99,18 +99,18 @@ python main.py  --loss 'VarBPRExact'
 |---------|:--------------:|:--------------:|:---:|:--------------:|:--------------:|
 | MovieLens 100K  |     MF        |      2       |  4  |       2        |       4        |  
 | MovieLens 1M  |     MF        |       2       |  4  |       8        |       8        |   
-| Gowalla  |     MF        |         2    | 15  |       10       |      0.1       | 
-| Yelp2018  |     MF        |        2     | 15  |       10       |      0.1       | 
+| Gowalla  |     MF        |         2    | 16  |      4       |     8       | 
+| Yelp2018  |     MF        |        2     | 16  |       4       |      8       | 
 | MovieLens 100K |    LightGCN        |      2       |  4  |       2        |       4        | 
 | MovieLens 1M  |     LightGCN        |       2      |  4  |       8        |       8        | 
-| Gowalla  |     LightGCN       |         2    | 20  |       10       |      0.1       | 
-| Yelp2018   |     LightGCN        |        2     | 20  |       10       |      0.1       | 
+| Gowalla  |     LightGCN       |         2    | 20  |       8       |      8       | 
+| Yelp2018   |     LightGCN        |        2     | 20  |       8       |      8       | 
 
 ### 5.3 Prior Coding
 | Component        | pos_rarity $\lambda_1^+$ | pos_quality $\lambda_2^+$ | pos_hardnees $\lambda_3^+$ | neg_popularity $\lambda_1^-$ | neg_badquality $\lambda_2^-$ | neg_hardnees $\lambda_3^-$ |
 |------------------|:------------------------:|:-------------------------:|:--------------------------:|:----------------------------:|:----------------------------:|:--------------------------:|
 | MovieLens100k/1M |            0             |             1             |             0              |              0               |             0.5              |            0.5             |
-| Yelp2018/Gowalla |            0             |             1             |             0              |              0               |             0.5              |            0.5             |
+| Yelp2018/Gowalla |            0.5             |             0             |             0.5             |              0               |             0             |            1.0             |
 ## 6. Customization Guide
 To train on a private dataset or use a customized encoder, follow these steps:
 
