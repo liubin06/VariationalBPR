@@ -69,9 +69,9 @@ We are profoundly grateful to the anonymous reviewers of IEEE TPAMI for their ex
 
 `--N`: Number of negative samples.
 
-`--cpos`: Positive scalling factor (for positve side exposure control)
+`--cpos`: Regularization strength for denoising and exposure control on the **positive side**.
 
-`--cneg`: Negitive scalling factor (for negative side suppression control)
+`--cneg`: Regularization strength for denoising and exposure control on the **negative side**.
 
 
 ## 5.Model Pretraining
@@ -80,7 +80,7 @@ For each dataset, the backbone model hyperparameters for VarBPR are fixed the sa
 
 
 ```
-python main.py  --loss 'VarBPRExact'  
+python main.py  
 ```
 
 
