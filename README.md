@@ -9,7 +9,7 @@ VarBPR is a unified variational framework that brings **exposure controllability
 - **Unified Noise & Bias Handling** — Seamlessly integrate denoising, popularity debiasing, and preference alignment in a unified variational framework.  
 - **Endogenous Exposure Control** — Shape exposure profiles directly via variational inference procedure instead of post-hoc adjusting.  
 - **Linear-Time Scalability** — Maintain BPR's efficiency while adding expressive control mechanisms.  
-- **Theoretical Guarantees** — With generalization insight from an opportunity-cost perspective for designing controllable recommender systems.
+- **Theoretical Guarantees** — With generalization guarantees **🔴 from an opportunity-cost perspective for designing controllable recommender systems.**
 
 Whether you're pushing the boundaries of recommendation research or building real-world systems with fairness requirements, VarBPR offers both **performance** and **policy control** in one elegant package.
 
