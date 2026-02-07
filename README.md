@@ -15,7 +15,7 @@ Whether you're pushing the boundaries of recommendation research or building rea
 
 📖 **Paper**: Link to paper [Variational Bayesian Personalized Ranking ](https://arxiv.org/pdf/2503.11067v2)
 ### Acknowledgements
-We are profoundly grateful to the anonymous reviewers of IEEE TPAMI for their exceptional efforts in elevating the conceptual foundation and theoretical depth of the Variational BPR framework. 
+**We are profoundly grateful to the anonymous reviewers of IEEE TPAMI for their exceptional efforts in elevating the conceptual foundation and theoretical depth of the Variational BPR framework.**
 
 <p align='center'>
 <img src='https://github.com/liubin06/Variational-BPR/blob/main/bound.png' width='700'/>
