@@ -7,7 +7,7 @@
 This work is accepted for publication in [***IEEE TPAMI***](https://ieeexplore.ieee.org/document/11429075) (2026)
 
 🎯 
-VarBPR is a unified variational framework that integrates **🔴preference alignment,🔴 popularity debiasing, and 🔴denoising** into a single pairwise learning objective for implicit collaborative filtering.
+VarBPR is a unified variational framework that integrates **preference alignment, popularity debiasing, and denoising** into a single pairwise learning objective for implicit collaborative filtering.
 
 - **Unified Noise & Bias Handling** — Seamlessly integrate denoising, popularity debiasing, and preference alignment in a unified variational framework.
 <p align='center'>
