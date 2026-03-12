@@ -1,19 +1,27 @@
+[![Academic Paper](https://img.shields.io/badge/IEEE%20TPAMI-2026-important.svg)](https://ieeexplore.ieee.org/document/11429075)
+[![DOI](https://img.shields.io/badge/DOI-10.1109/TPAMI.2026.3672705-royalblue)](10.1109/TPAMI.2026.3672705)
 ![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)
 
-# Variational Bayesian Personalized Ranking
 
+# Variational Bayesian Personalized Ranking
+This work is accepted for publication in [***IEEE TPAMI***](https://ieeexplore.ieee.org/document/11429075) (2026)
 
 🎯 
-VarBPR is a unified variational framework that brings **exposure controllability** and **theoretical interpretability** implicit-feedback pairwise learning into principled variational inference, enabling:
+VarBPR is a unified variational framework that integrates **preference alignment, popularity debiasing**, and denoising into a single pairwise learning objective for implicit collaborative filtering.
 
 - **Unified Noise & Bias Handling** — Seamlessly integrate denoising, popularity debiasing, and preference alignment in a unified variational framework.  
-- **Endogenous Exposure Control** — Shape exposure profiles directly via variational inference procedure instead of post-hoc adjusting.  
+- **Controllable Long-tail Exposure** — VarBPR enables **controllable long-tail exposure through a flexible direction-strength variational inference mechanism**.
+<p align='center'>
+<img src='https://github.com/liubin06/VariationalBPR/blob/main/pareto.png' width='700'/>
+</p>
+
 - **Linear-Time Scalability** — Maintain BPR's efficiency while adding expressive control mechanisms.  
 - **Theoretical Guarantees** — With generalization guarantees **🔴 from an opportunity-cost perspective for designing controllable recommender systems.**
 
+
 Whether you're pushing the boundaries of recommendation research or building real-world systems with fairness requirements, VarBPR offers both **performance** and **policy control** in one elegant package.
 
-📖 **Paper**: Link to paper [Variational Bayesian Personalized Ranking ](https://arxiv.org/pdf/2503.11067v2)
+📖 **ArXiv**: Link to paper [Variational Bayesian Personalized Ranking ](https://arxiv.org/pdf/2503.11067v2)
 ### Acknowledgements
 **We are profoundly grateful to the anonymous reviewers of IEEE TPAMI for their exceptional efforts in elevating the conceptual foundation and theoretical depth of the Variational BPR framework.**
 
