@@ -12,7 +12,7 @@ VarBPR is a unified variational framework that integrates **preference alignment
 - **Unified Noise & Bias Handling** — Seamlessly integrate denoising, popularity debiasing, and preference alignment in a unified variational framework.  
 - **Controllable Long-tail Exposure** — VarBPR enables **controllable long-tail exposure through a flexible direction-strength variational inference mechanism**.
 <p align='center'>
-<img src='https://github.com/liubin06/VariationalBPR/blob/main/pareto.png' width='700'/>
+<img src='https://github.com/liubin06/VariationalBPR/blob/main/pareto.png' width='500'/>
 </p>
 
 - **Linear-Time Scalability** — Maintain BPR's efficiency while adding expressive control mechanisms.  
