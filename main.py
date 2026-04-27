@@ -25,7 +25,7 @@ def init_seed(seed):
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
 
-
+# Calculate prior pi^+ by Eq. (33)
 @torch.no_grad()
 def prior_plus(pos_scores, positem_id):
     hardness = torch.nn.functional.softmax((pos_scores.mean(dim=-1, keepdim=True) - pos_scores) / args.hardnees_tau,dim=-1)  # [bs,M]
@@ -33,7 +33,7 @@ def prior_plus(pos_scores, positem_id):
     quality = good_quality[positem_id]  # [bs,M]
     return batch_rarity ** args.pos_rarity * hardness ** args.pos_hardness * quality ** args.pos_quality  # [bs,M]
 
-
+# Calculate prior pi^- by Eq. (34)
 @torch.no_grad()
 def prior_minus(neg_scores, negitem_id):
     hardness = torch.nn.functional.softmax((neg_scores - neg_scores.mean(dim=-1, keepdim=True)) / args.hardnees_tau,dim=-1)  # [bs,N]
@@ -41,7 +41,7 @@ def prior_minus(neg_scores, negitem_id):
     quality_bad = bad_quality[negitem_id]  # [bs,N]
     return batch_pop ** args.neg_popularity * hardness ** args.neg_hardness * quality_bad ** args.neg_badquality  # [bs,N]
 
-
+# Calculate variational posters alpha / beta by Eq. (12)/(13)
 @torch.no_grad()
 def VarInference(scores, prior, scaling_factor, eps=1e-12):
     """
@@ -54,6 +54,7 @@ def VarInference(scores, prior, scaling_factor, eps=1e-12):
     VarDist = torch.softmax(logits, dim=-1)  # [bs, M]
     return VarDist
 
+# VarBPR loss (Eq.14): better performance
 def VarBPRExact(pos_score, neg_score, alpha, beta):
     '''
     This is the variational BPR implementation without plug-in approximation, for small M,N, choose VarBPRExact to achieve better performance.
@@ -69,7 +70,7 @@ def VarBPRExact(pos_score, neg_score, alpha, beta):
     loss = torch.sum(logistics * dist, dim=-1).mean()
     return loss
 
-
+# VarBPR loss (Eq.19): optimized for large M/N with stronger strategy adherence & higher efficiency
 def VarBPRPlugIn(pos_score, neg_score, alpha, beta):
     '''
     This is the variational BPR implementation with plug-in approximation, for large M,N, choose VarBPRApprox to ensure efficiency.
