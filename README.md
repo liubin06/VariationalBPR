@@ -1,10 +1,12 @@
 [![Academic Paper](https://img.shields.io/badge/IEEE%20TPAMI-2026-important.svg)](https://ieeexplore.ieee.org/document/11429075)
 [![DOI](https://img.shields.io/badge/DOI-10.1109/TPAMI.2026.3672705-royalblue)](10.1109/TPAMI.2026.3672705)
+[![GitHub Stars](https://img.shields.io/github/stars/liubin06/VariationalBPR.svg?style=social)](https://github.com/liubin06/VariationalBPR)
+[![PyTorch](https://img.shields.io/badge/PyTorch-1.8%2B-orange.svg)](https://pytorch.org/)
 ![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)
 
 
 # Variational Bayesian Personalized Ranking
-This work is accepted for publication in [***IEEE TPAMI***](https://ieeexplore.ieee.org/document/11429075) (2026)
+Official PyTorch implementation of [***Variational Bayesian Personalized Ranking***](https://ieeexplore.ieee.org/document/11429075) (IEEE TPAMI, 2026).
 
 🎯 
 VarBPR is a unified variational framework that integrates **preference alignment, popularity debiasing, and denoising** into a single pairwise learning objective for implicit collaborative filtering.
