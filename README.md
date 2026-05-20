@@ -6,10 +6,22 @@
 
 
 # Variational Bayesian Personalized Ranking
-Official PyTorch implementation of [***Variational Bayesian Personalized Ranking***](https://ieeexplore.ieee.org/document/11429075) (IEEE TPAMI, 2026).
+Official PyTorch implementation of [***Variational Bayesian Personalized Ranking***](https://ieeexplore.ieee.org/document/11429075) (IEEE TPAMI, 2026). Should you use this work in your research, please cite the following paper:
+```
+# bibtex 
+@article{11429075,
+  author={Liu, Bin and Liu, Xiaohong and Luo, Qin and Shang, Ziqiao and Chu, Jielei and Ma, Lin and Li, Zhaoyu and Teng, Fei and Zhai, Guangtao and Li, Tianrui},
+  journal={IEEE Transactions on Pattern Analysis and Machine Intelligence}, 
+  title={Variational Bayesian Personalized Ranking}, 
+  year={2026},
+  pages={1-16},
+  doi={10.1109/TPAMI.2026.3672705}
+  }
+```
+📖 **ArXiv**: Link to paper [Variational Bayesian Personalized Ranking ](https://arxiv.org/pdf/2503.11067v2)
 
-🎯 
-VarBPR is a unified variational framework that integrates **preference alignment, popularity debiasing, and denoising** into a single pairwise learning objective for implicit collaborative filtering.
+# 1. Introduction
+🎯 VarBPR is a unified variational framework that integrates **preference alignment, popularity debiasing, and denoising** into a single pairwise learning objective for implicit collaborative filtering. Whether you're pushing the boundaries of recommendation research or building real-world systems with fairness requirements, VarBPR offers both **performance** and **policy control** in one elegant package.
 
 - **Unified Noise & Bias Handling** — Seamlessly integrate denoising, popularity debiasing, and preference alignment in a unified variational framework.
 <p align='center'>
@@ -25,22 +37,16 @@ VarBPR is a unified variational framework that integrates **preference alignment
 - **Theoretical Guarantees** — We provide interpretable generalization guarantees, reveal the **🔴opportunity cost** of prioritizing certain exposure patterns(e.g. long-tail), and offer a analytical tool for analyzing and designing controllable recommendation systems.
 
 
-Whether you're pushing the boundaries of recommendation research or building real-world systems with fairness requirements, VarBPR offers both **performance** and **policy control** in one elegant package.
-
-📖 **ArXiv**: Link to paper [Variational Bayesian Personalized Ranking ](https://arxiv.org/pdf/2503.11067v2)
-### Acknowledgements
-**We thank the anonymous reviewers of IEEE TPAMI for their insightful comments and constructive suggestions, which have greatly improved VarBPR.**
+🚀 **Get started in minutes** — Transform your recommender from a black box into a controllable, interpretable system.
 
 
-
-🛠️ **Features**:
+### Features:
 - Plug-and-play replacement for standard BPR loss
 - Support for MF, LightGCN, XSimGCL backbones
 - Dual implementation: efficient plug-in & exact ELBO versions
 - Full reproducibility with open datasets
 - Practical generalization guarantees and controllable exposure policies.
 
-🚀 **Get started in minutes** — Transform your recommender from a black box into a controllable, interpretable system.
 
 ### Major Changes
 
@@ -50,6 +56,8 @@ Whether you're pushing the boundaries of recommendation research or building rea
 - **Improved evaluation** by incorporating long-tail exposure (APLT) and Top-5 evaluation.
 - Refined the multi-threaded data loading pipeline to minimize idle time.
 
+### Acknowledgements
+**We thank the anonymous reviewers of IEEE TPAMI for their insightful comments and constructive suggestions, which have greatly improved VarBPR.**
 
 
 
