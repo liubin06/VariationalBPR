@@ -25,12 +25,12 @@ Official PyTorch implementation of [***Variational Bayesian Personalized Ranking
 
 - **Unified Noise & Bias Handling** — Seamlessly integrate denoising, popularity debiasing, and preference alignment in a unified variational framework.
 <p align='center'>
-<img src='https://github.com/liubin06/Variational-BPR/blob/main/bound.png' width='700'/>
+<img src='https://github.com/liubin06/Variational-BPR/blob/main/result/bound.png' width='700'/>
 </p>
 
 - **Controllable Long-tail Exposure** — VarBPR enables **controllable long-tail exposure through a flexible direction-strength variational inference mechanism**.
 <p align='center'>
-<img src='https://github.com/liubin06/VariationalBPR/blob/main/pareto.png' width='600'/>
+<img src='https://github.com/liubin06/VariationalBPR/blob/main/result/pareto.png' width='600'/>
 </p>
 
 - **Linear-Time Scalability** — Maintain the time complexity and peak GPU memory usage of BPR.
